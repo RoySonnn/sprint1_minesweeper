@@ -14,6 +14,7 @@ function onInit() {
     minesRandomizer(gBoard, mineCount)
     setMinesNegsCount(gBoard)
     renderBoard(gBoard)
+    document.addEventListener('contextmenu', event => event.preventDefault())
 }
 
 function buildBoard(boardSize) {
@@ -92,6 +93,14 @@ function onCellClicked(i, j, elCell) {
 
 }
 
+function onCellMarked(i, j, elCell) {
+    var cell = gBoard[i][j]
+    if (cell.isRevealed) return
+    cell.isMarked = !cell.isMarked
+    var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+    elCell.innerText = cell.isMarked ? '⚠️' : ''
+}
+
 function renderBoard(board) { // maybe move it to utils and create a gContent for this specific case...
     var strHTML = ''
     for (var i = 0; i < boardSize; i++) {
@@ -100,7 +109,8 @@ function renderBoard(board) { // maybe move it to utils and create a gContent fo
             var cell = board[i][j]
             var content = cell.isMine ? MINE : cell.minesAroundCount
             var showContent = cell.isRevealed ? content : ''
-            strHTML += `<td class="cell" data-i="${i}" data-j="${j}" onclick="onCellClicked(${i}, ${j})">${showContent}</td>`
+            strHTML += `<td class="cell" data-i="${i}" data-j="${j}" onclick="onCellClicked(${i}, ${j}, this)"
+                oncontextmenu="onCellMarked(${i}, ${j}, event)">${showContent}</td>`
 
         }
         strHTML += '</tr>'
