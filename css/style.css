@@ -1,3 +1,9 @@
+body {
+  background-color: gray;
+  margin: 0;
+  padding: 0;
+}
+
 table {
   margin: 50px auto;
 }
@@ -13,5 +19,33 @@ table {
 }
 
 .revealed {
-  background-color: gray;
+  background-color: rgb(230, 230, 230);
+}
+
+.mine {
+  background-color: rgb(0, 0, 0);
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgb(29, 144, 144);
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
+  color: black;
+  line-height: 1.5;
+}
+
+.footer-title {
+  font-size: 17px;
+  margin: 0;
+}
+
+.footer-name {
+  font-size: 15px;
+  color: black;
+  margin: 0;
 }
