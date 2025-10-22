@@ -4,7 +4,7 @@ const MINE = '💥'
 const FLAG = '⚠️'
 
 var boardSize = 4
-var mineCount = 15
+var mineCount = 1
 var gIsFirstClick = true
 var gBoard
 
@@ -97,6 +97,7 @@ function onCellClicked(i, j, elCell) {
         // elCell.classList.add('revealed')
     } else {
         elCell.innerText = ''
+        expandReveal (i, j, gBoard)
         // elCell.classList.add('revealed')
     }
     // console.table(gBoard)
@@ -131,4 +132,28 @@ function renderBoard(board) { // maybe move it to utils and create a gContent fo
         strHTML += '</tr>'
     }
     document.querySelector('.board').innerHTML = strHTML
+}
+
+
+function expandReveal(cellI, cellJ, board) {
+    for (var rowIdx = cellI - 1; rowIdx <= cellI + 1; rowIdx++) {
+        if (rowIdx < 0 || rowIdx >= board.length) continue
+        for (var colIdx = cellJ - 1; colIdx <= cellJ + 1; colIdx++) {
+            if (colIdx < 0 || colIdx >= board[0].length) continue
+            if (rowIdx === cellI && colIdx === cellJ) continue
+
+            var neighbor = board[rowIdx][colIdx]
+            if (neighbor.isRevealed || neighbor.isMine || neighbor.isMarked) continue
+
+            neighbor.isRevealed = true
+            var elNeighbor = document.querySelector(`[data-i="${rowIdx}"][data-j="${colIdx}"]`)
+            elNeighbor.classList.add('revealed')
+
+            if (neighbor.minesAroundCount > 0) {
+                elNeighbor.innerText = neighbor.minesAroundCount
+            } else {
+                elNeighbor.innerText = ''
+            }
+        }
+    }
 }
