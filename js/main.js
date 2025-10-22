@@ -3,15 +3,15 @@
 const MINE = '💥'
 
 var boardSize = 4
-var gBoard = buildBoard(boardSize)
+var mineCount = 5
+var gBoard
 
-console.table(gBoard)
-
+// console.table(gBoard)
+// gBoard[0][0].isMine = true
+// gBoard[0][1].isMine = true
 function onInit() {
     gBoard = buildBoard(boardSize)
-    gBoard[0][0].isMine = true
-    gBoard[0][1].isMine = true
-
+    minesRandomizer(gBoard, mineCount)
     setMinesNegsCount(gBoard)
     renderBoard(gBoard)
 }
@@ -31,6 +31,21 @@ function buildBoard(boardSize) {
     }
     return board
 }
+
+function minesRandomizer(board, mineCount) {
+    var placedMines = 0
+    while (placedMines < mineCount) {
+        var i = getRandomInt(0, board.length)
+        var j = getRandomInt(0, board[0].length)
+        if (!board[i][j].isMine) {
+            board[i][j].isMine = true
+            placedMines++
+        }
+    }
+}
+
+
+
 
 function setMinesNegsCount(board) {
     for (var i = 0; i < board.length; i++) {
@@ -57,17 +72,12 @@ function countNeighbors(cellI, cellJ, board) {
     return neighborsCount
 }
 
-function onCellClicked(ev) {
-
-    var elClicked = ev.target
-    if (!elClicked.classList.contains('cell')) return
-    var i = +elClicked.dataset.i
-    var j = +elClicked.dataset.j
-    var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+function onCellClicked(i, j, elCell) {
 
     var cell = gBoard[i][j]
     if (cell.isRevealed) return
     cell.isRevealed = true
+    var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
 
     if (cell.isMine) {
         elCell.innerText = MINE
@@ -87,7 +97,10 @@ function renderBoard(board) { // maybe move it to utils and create a gContent fo
     for (var i = 0; i < boardSize; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
-            strHTML += `<td class="cell" data-i="${i}" data-j="${j}"></td>`
+            var cell = board[i][j]
+            var content = cell.isMine ? MINE : cell.minesAroundCount
+            var showContent = cell.isRevealed ? content : ''
+            strHTML += `<td class="cell" data-i="${i}" data-j="${j}" onclick="onCellClicked(${i}, ${j})">${showContent}</td>`
 
         }
         strHTML += '</tr>'
