@@ -15,7 +15,7 @@ function getRandomIntInclusive(min, max) {
 
 var gStartTime
 var gTimerInterval
-var ms = 1000
+var ms = 31
 
 function startTimer() {
   gStartTime = Date.now()
@@ -23,13 +23,21 @@ function startTimer() {
 }
 
 function updateTimer() {
-  var seconds = Math.floor((Date.now() - gStartTime) / 1000)
-  document.querySelector('.timer').innerText = seconds
-  gGame.secsPassed = seconds
+  var elapsed = Date.now() - gStartTime
+
+  var minutes = Math.floor(elapsed / 60000)
+  var seconds = Math.floor((elapsed % 60000) / 1000)
+  var hundredths = Math.floor((elapsed % 1000) / 10) 
+
+  var formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(hundredths).padStart(2, '0')}`
+  document.querySelector('.timer').innerText = formatted
+
+  gGame.secsPassed = elapsed / 1000
 }
 
 function stopTimer() {
   clearInterval(gTimerInterval)
 }
+
 
 ////////////////////////////////////////////////////////

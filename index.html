@@ -7,24 +7,23 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
-  <body onload="onInit()">
-    <div class="dashboard">
-      <div class="panel left">
-        <span class="lives"></span>
+  <body onload="onPageLoad()">
+    <div class="game-container">
+      <div class="dashboard">
+        <div class="level-buttons"></div>
+
+        <div class="top-row">
+          <button class="smiley" onclick="onUserleyClick()"></button>
+          <span class="timer">00:00:00</span>
+        </div>
+
+        <div class="lives"></div>
       </div>
 
-      <div class="panel center">
-        <button class="smiley" onclick="onUserleyClick()"></button>
-      </div>
-
-      <div class="panel right">
-        <span class="timer">0</span>
-      </div>
+      <table>
+        <tbody class="board"></tbody>
+      </table>
     </div>
-
-    <table>
-      <tbody class="board"></tbody>
-    </table>
 
     <footer>
       <p class="footer-title">Sprint 1 Project - Coding Academy</p>

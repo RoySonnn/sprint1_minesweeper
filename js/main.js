@@ -6,9 +6,19 @@ const LIVES = '🪖'
 const USERLEY = '🐔'
 const LOST = '🍗'
 const WON = '🐣'
+const WRONGFLAG = '❌'
 
-var gBoardSize = 10
-var gMineCount = 97
+
+var gLevels = [
+    { name: 'Beginner', SIZE: 4, MINES: 2 },
+    { name: 'Medium', SIZE: 8, MINES: 14 },
+    { name: 'Expert', SIZE: 12, MINES: 32 }
+]
+var gLevel = gLevels[0]
+
+
+var gBoardSize = gLevel.SIZE
+var gMineCount = gLevel.MINES
 var gIsFirstClick
 var gBoard
 
@@ -18,6 +28,12 @@ var gGame = {
     markedCount: 0,
     secsPassed: 0,
     lives: 0
+}
+
+function onPageLoad() {
+    renderLevelButtons()
+    highlightActiveButton(0)
+    onInit()
 }
 
 function onInit() {
@@ -30,7 +46,7 @@ function onInit() {
 
     setSmiley(USERLEY)
     clearInterval(gTimerInterval)
-    document.querySelector('.timer').innerText = '0'
+    document.querySelector('.timer').innerText = '00:00:00'
     gBoard = buildBoard(gBoardSize)
     renderBoard(gBoard)
     updateLivesDisplay()
@@ -57,6 +73,15 @@ function buildBoard(gBoardSize) {
 function setSmiley(symbol) {
     document.querySelector('.smiley').innerText = symbol
 }
+
+function renderLevelButtons() {
+    var strHTML = ''
+    for (var i = 0; i < gLevels.length; i++) {
+        strHTML += `<button class="level-btn" onclick="onLevelClick(${i})">${gLevels[i].name}</button>`
+    }
+    document.querySelector('.level-buttons').innerHTML = strHTML
+}
+
 
 function updateLivesDisplay() {
     var elLives = document.querySelector('.lives')
@@ -105,17 +130,37 @@ function countNeighbors(cellI, cellJ, board) {
     return neighborsCount
 }
 
+function onLevelClick(idx) {
+    gLevel = gLevels[idx]
+    gBoardSize = gLevel.SIZE
+    gMineCount = gLevel.MINES
+    highlightActiveButton(idx)
+    onInit()
+}
+
+function highlightActiveButton(activeIdx) {
+    var buttons = document.querySelectorAll('.level-btn')
+    for (var i = 0; i < buttons.length; i++) {
+        if (i === activeIdx) {
+            buttons[i].classList.add('active')
+        } else {
+            buttons[i].classList.remove('active')
+        }
+    }
+}
+
+
 function onCellClicked(i, j, elCell) {
     if (!gGame.isOn) return
 
     var cell = gBoard[i][j]
 
     if (cell.isMarked) {
-    cell.isMarked = false
-    gGame.markedCount--
-    elCell.innerText = ''
-    elCell.classList.remove('life')
-}
+        cell.isMarked = false
+        gGame.markedCount--
+        elCell.innerText = ''
+        elCell.classList.remove('life')
+    }
 
     if (cell.isRevealed && !cell.isMine) return
 
@@ -149,7 +194,7 @@ function onCellClicked(i, j, elCell) {
                 elCell.classList.remove('life')
                 cell.isRevealed = false
             }
-        }, 800)
+        }, 500)
 
         return
     }
@@ -249,7 +294,7 @@ function revealAllMines() {
                 elCell.classList.add('mine', 'revealed')
             }
             else if (cell.isMarked && !cell.isMine) {
-                elCell.innerText = '❌'
+                elCell.innerText = WRONGFLAG
                 elCell.classList.add('revealed', 'wrong-flag')
             }
         }
@@ -289,7 +334,5 @@ function gameOver(isWin) {
 function onUserleyClick() {
     onInit()
 }
-
-
 
 
