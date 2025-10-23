@@ -2,9 +2,13 @@
 
 const MINE = '💥'
 const FLAG = '⚠️'
+const LIVES = '🪖'
+const USERLEY = '🐔'
+const LOST = '🍗'
+const WON = '🐣'
 
-var gBoardSize = 4
-var gMineCount = 1
+var gBoardSize = 10
+var gMineCount = 97
 var gIsFirstClick
 var gBoard
 
@@ -12,24 +16,25 @@ var gGame = {
     isOn: false,
     revealedCount: 0,
     markedCount: 0,
-    secsPassed: 0
+    secsPassed: 0,
+    lives: 0
 }
-
-
-
-// gBoard[0][0].isMine = true
-// gBoard[0][1].isMine = true
 
 function onInit() {
     gGame.isOn = true
+    gGame.lives = 3
     gGame.revealedCount = 0
     gGame.markedCount = 0
     gGame.secsPassed = 0
     gIsFirstClick = true
+
+    setSmiley(USERLEY)
+    clearInterval(gTimerInterval)
+    document.querySelector('.timer').innerText = '0'
     gBoard = buildBoard(gBoardSize)
     renderBoard(gBoard)
+    updateLivesDisplay()
     document.addEventListener('contextmenu', event => event.preventDefault())
-    // console.table(gBoard)
 }
 
 
@@ -49,6 +54,18 @@ function buildBoard(gBoardSize) {
     return board
 }
 
+function setSmiley(symbol) {
+    document.querySelector('.smiley').innerText = symbol
+}
+
+function updateLivesDisplay() {
+    var elLives = document.querySelector('.lives')
+    var lives = ''
+    for (var i = 0; i < gGame.lives; i++) {
+        lives += LIVES
+    }
+    elLives.innerText = lives
+}
 
 function minesRandomizer(board, gMineCount, firstClickI, firstClickJ) {
     var placedMines = 0
@@ -88,53 +105,90 @@ function countNeighbors(cellI, cellJ, board) {
     return neighborsCount
 }
 
-
 function onCellClicked(i, j, elCell) {
     if (!gGame.isOn) return
 
     var cell = gBoard[i][j]
-    if (cell.isRevealed) return // maybe to add the condition || cell.isMarked...
 
-    if (gIsFirstClick) {
+    if (cell.isMarked) {
+    cell.isMarked = false
+    gGame.markedCount--
+    elCell.innerText = ''
+    elCell.classList.remove('life')
+}
+
+    if (cell.isRevealed && !cell.isMine) return
+
+    if (gIsFirstClick && !cell.isMarked) {
         minesRandomizer(gBoard, gMineCount, i, j)
         setMinesNegsCount(gBoard)
         gIsFirstClick = false
+        startTimer()
     }
 
+    if (cell.isMine) {
+        gGame.lives--
+        updateLivesDisplay()
+
+        if (gGame.lives === 0) {
+            gGame.isOn = false
+            elCell.innerText = MINE
+            elCell.classList.add('mine', 'revealed')
+            revealAllMines()
+            gameOver(false)
+            return
+        }
+
+        elCell.innerText = LIVES
+        elCell.classList.add('life')
+        elCell.classList.remove('revealed')
+
+        setTimeout(function () {
+            if (!cell.isMarked && gGame.isOn) {
+                elCell.innerText = ''
+                elCell.classList.remove('life')
+                cell.isRevealed = false
+            }
+        }, 800)
+
+        return
+    }
+
+
+    if (cell.isRevealed) return
     cell.isRevealed = true
     gGame.revealedCount++
     elCell.classList.add('revealed')
-    // var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
 
-    if (cell.isMine) {
-        elCell.innerText = MINE
-        elCell.classList.add('mine')//, 'revealed')
-        revealAllMines()
-        gameOver(false)
-        return
-    } else if (cell.minesAroundCount > 0) {
+    if (cell.minesAroundCount > 0) {
         elCell.innerText = cell.minesAroundCount
-        // elCell.classList.add('revealed')
     } else {
         elCell.innerText = ''
         expandReveal(i, j, gBoard)
-        // elCell.classList.add('revealed')
     }
-    checkVictory()
-    // console.table(gBoard)
 
+    checkVictory()
 }
 
 
 function onCellMarked(i, j, elCell) {
     if (!gGame.isOn) return
-    var cell = gBoard[i][j]
 
+    var cell = gBoard[i][j]
     if (cell.isRevealed) return
+
+    elCell.classList.remove('life')
+    if (elCell.innerText === LIVES) elCell.innerText = ''
+
+    if (elCell.innerText === '' && cell.isMarked) {
+        elCell.innerText = FLAG
+        return
+    }
+
     cell.isMarked = !cell.isMarked
-    // var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
     elCell.innerText = cell.isMarked ? FLAG : ''
     gGame.markedCount += cell.isMarked ? 1 : -1
+
     checkVictory()
 }
 
@@ -171,7 +225,7 @@ function expandReveal(cellI, cellJ, board) {
 
             neighbor.isRevealed = true
             gGame.revealedCount++
-            
+
             var elNeighbor = document.querySelector(`[data-i="${rowIdx}"][data-j="${colIdx}"]`)
             elNeighbor.classList.add('revealed')
 
@@ -188,14 +242,20 @@ function revealAllMines() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             var cell = gBoard[i][j]
+            var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+
             if (cell.isMine) {
-                var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
                 elCell.innerText = MINE
                 elCell.classList.add('mine', 'revealed')
+            }
+            else if (cell.isMarked && !cell.isMine) {
+                elCell.innerText = '❌'
+                elCell.classList.add('revealed', 'wrong-flag')
             }
         }
     }
 }
+
 
 function checkVictory() {
     var totalCells = gBoardSize ** 2
@@ -204,12 +264,32 @@ function checkVictory() {
     if (gGame.revealedCount === safeCells) gameOver(true)
 }
 
+
 function gameOver(isWin) {
     gGame.isOn = false
-    setTimeout(function () {
-        alert(isWin ? 'You Won!!' : 'You lost')
-    }, 100)
+    stopTimer()
+    setSmiley(isWin ? WON : LOST)
+
+    if (isWin) {
+        for (var i = 0; i < gBoard.length; i++) {
+            for (var j = 0; j < gBoard[0].length; j++) {
+                var cell = gBoard[i][j]
+                var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+                if (cell.isMine && !cell.isMarked) {
+                    elCell.innerText = FLAG
+                    elCell.classList.add('revealed')
+                }
+            }
+        }
+    } else {
+        revealAllMines()
+    }
 }
+
+function onUserleyClick() {
+    onInit()
+}
+
 
 
 

@@ -1,5 +1,5 @@
 body {
-  background-color: gray;
+  background-color: rgb(171, 170, 170);
   margin: 0;
   padding: 0;
 }
@@ -18,13 +18,19 @@ table {
   cursor: pointer;
 }
 
+/* .life {
+  background-color: rgb(255, 255, 255); 
+  /* color: black; */
+/* }  */
+ 
+
 .revealed {
   background-color: rgb(230, 230, 230);
 }
 
-.mine {
+/* .mine {
   background-color: rgb(0, 0, 0);
-}
+} */
 
 footer {
   position: fixed;
@@ -48,4 +54,28 @@ footer {
   font-size: 15px;
   color: black;
   margin: 0;
+}
+
+.dashboard {
+  text-align:  center;
+  margin-bottom:  15px;
+}
+button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding:  8px 16px;
+  border-radius:  6px;
+  font-size:  16px;
+  cursor:  pointer;
+  margin-right:  10px;
+}
+
+button:hover {
+  background-color: rgb(73, 53, 222);
+}
+
+.timer {
+  font-size:  18px;
+  color: black;
 }

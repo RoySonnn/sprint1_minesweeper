@@ -8,6 +8,20 @@
   </head>
 
   <body onload="onInit()">
+    <div class="dashboard">
+      <div class="panel left">
+        <span class="lives"></span>
+      </div>
+
+      <div class="panel center">
+        <button class="smiley" onclick="onUserleyClick()"></button>
+      </div>
+
+      <div class="panel right">
+        <span class="timer">0</span>
+      </div>
+    </div>
+
     <table>
       <tbody class="board"></tbody>
     </table>
@@ -16,7 +30,7 @@
       <p class="footer-title">Sprint 1 Project - Coding Academy</p>
       <p class="footer-name">Roy Sonnenberg</p>
     </footer>
-    
+
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
   </body>
