@@ -27,7 +27,7 @@ function updateTimer() {
 
   var minutes = Math.floor(elapsed / 60000)
   var seconds = Math.floor((elapsed % 60000) / 1000)
-  var hundredths = Math.floor((elapsed % 1000) / 10) 
+  var hundredths = Math.floor((elapsed % 1000) / 10)
 
   var formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(hundredths).padStart(2, '0')}`
   document.querySelector('.timer').innerText = formatted
@@ -36,8 +36,18 @@ function updateTimer() {
 }
 
 function stopTimer() {
-  clearInterval(gTimerInterval)
+  if (gTimerInterval) {
+    clearInterval(gTimerInterval)
+    gTimerInterval = null
+  }
+
+  if (gStartTime) {
+    var elapsed = Date.now() - gStartTime
+    gGame.secsPassed = elapsed / 1000
+  }
 }
+
+
 
 
 ////////////////////////////////////////////////////////

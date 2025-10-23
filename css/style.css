@@ -145,6 +145,21 @@ body {
   box-sizing: border-box;
 }
 
+.right-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  transform: translateX(20px);
+}
+
+.best-score {
+  font-size: 14px;
+  color: #333;
+  font-family: monospace;
+}
+
 .lives {
   margin-top: 6px;
   font-size: 22px;
@@ -171,6 +186,11 @@ table {
   background-color: rgb(230, 230, 230);
 }
 
+.flagged-win {
+  background-color: rgb(200, 200, 200);
+  color: black;
+}
+
 footer {
   position: fixed;
   bottom: 0;
@@ -192,4 +212,74 @@ footer {
   font-size: 15px;
   color: black;
   margin: 0;
+}
+.exterminator-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  gap: 4px;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.exterminator-container.fade-out {
+  opacity: 0;
+}
+
+.tornado {
+  font-size: 30px;
+}
+
+.exterminator-msg {
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  margin: 4px 0;
+}
+
+.exterminator-indicator {
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+.exterminator-indicator.flick {
+  animation: flick3 0.5s ease-in-out 3;
+}
+
+@keyframes flick3 {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.3);
+  }
+}
+
+.exterminator-container.used {
+  display: none;
+}
+
+.exterminator-btn {
+  margin-top: 4px;
+  background-color: crimson;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.3s;
+}
+
+.exterminator-btn:hover:not(:disabled) {
+  background-color: rgb(255, 80, 80);
+}
+
+.exterminator-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
