@@ -13,31 +13,34 @@
         <div class="level-buttons"></div>
 
         <div class="top-row">
-          <div class="hints-container">
-            <div class="hint-msg">Reveal first cell to enable hints</div>
-            <div class="hints"></div>
+          <div class="tools-panel">
+            <div class="hints-container">
+              <div class="hint-msg">
+                Reveal first cell to enable hints & The Exterminator!!!
+              </div>
+              <div class="hints"></div>
+            </div>
+
+            <div class="exterminator-container">
+              <div class="exterminator-msg">
+                Press the Tornado to exterminate 3 mines
+              </div>
+
+              <button class="exterminator-btn" onclick="onExterminateClick()">
+                <div class="tornado">🌪️</div>
+              </button>
+              <div class="exterminator-indicator">💥💥💥</div>
+            </div>
           </div>
 
           <button class="smiley" onclick="onUserleyClick()"></button>
-
           <span class="timer">00:00:00</span>
         </div>
 
         <div class="lives"></div>
-
-        <div class="exterminator-container">
-          <div class="tornado">🌪️</div>
-          <div class="exterminator-msg">Click to exterminate 3 mines</div>
-          <div class="exterminator-indicator">💥💥💥</div>
-          <button class="exterminator-btn" onclick="onExterminateClick()">
-            Exterminator
-          </button>
-        </div>
       </div>
 
-      <table>
-        <tbody class="board"></tbody>
-      </table>
+      <div class="board"></div>
 
       <div class="best-score">Best: 00:00:00</div>
     </div>
