@@ -346,10 +346,22 @@ function expandReveal(ci, cj, board) {
 
 
 function onHintClick(elHint) {
-  if (gIsHintMode || gHintsCount === 0) return
-  gIsHintMode = true
+  if (elHint.classList.contains('used')) return
+
+  if (elHint.classList.contains('active')) {
+    elHint.classList.remove('active')
+    gIsHintMode = false
+    return
+  }
+
+  const activeHint = document.querySelector('.hint.active')
+  if (activeHint) activeHint.classList.remove('active')
+
   elHint.classList.add('active')
+  gIsHintMode = true
+  gPendingHint = elHint
 }
+
 
 function revealHintArea(cellI, cellJ) {
   const revealedTemp = []
