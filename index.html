@@ -13,7 +13,21 @@
         <div class="level-buttons"></div>
 
         <div class="top-row">
-          <div class="tools-panel">
+          <div class="left-panel">
+            <span class="flags-counter">⚠️00</span>
+          </div>
+
+          <div class="center-panel">
+            <button class="smiley" onclick="onUserleyClick()"></button>
+          </div>
+
+          <div class="right-panel">
+            <span class="timer">00:00:00</span>
+          </div>
+        </div>
+
+        <div class="tools-box">
+          <div class="hints-exterminator">
             <div class="hints-container">
               <div class="hint-msg">
                 Reveal first cell to enable hints & The Exterminator!!!
@@ -25,23 +39,18 @@
               <div class="exterminator-msg">
                 Press the Tornado to exterminate 3 mines
               </div>
-
               <button class="exterminator-btn" onclick="onExterminateClick()">
                 <div class="tornado">🌪️</div>
               </button>
               <div class="exterminator-indicator">💥💥💥</div>
             </div>
           </div>
-
-          <button class="smiley" onclick="onUserleyClick()"></button>
-          <span class="timer">00:00:00</span>
         </div>
 
         <div class="lives"></div>
       </div>
 
       <div class="board"></div>
-
       <div class="best-score">Best: 00:00:00</div>
     </div>
 
@@ -50,7 +59,6 @@
       <p class="footer-name">Roy Sonnenberg</p>
     </footer>
 
-    <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
